@@ -1,0 +1,231 @@
+////////////////////////////////////////////////////////////////////////////////
+// Template for lab 5 submission
+////////////////////////////////////////////////////////////////////////////////
+
+// Include the checkoff program:
+.include "/shared/bsim/lab5checkoff.uasm"
+
+// Leave the following as zero to run ALL the test cases, and get your solution
+//   validated if all pass.  If you have trouble with test case N, set it to N
+//   to run JUST that test case (for easier debugging):
+TestCase:	LONG(0)
+
+//def partition(array,left,right):
+//    # choose middle element of array as pivot
+//    pivotIndex = (left+right) >> 1;
+//    pivotValue = array[pivotIndex]
+//
+//    # swap array[right] and array[pivotIndex]
+//    # note that we already store array[pivotIndex] in pivotValue
+//    array[pivotIndex] = array[right]
+//
+//    # elements <= the pivot are moved to the left (smaller indices)
+//    storeIndex = left
+//    for i in xrange(left,right):  # don't include array[right]
+//        temp = array[i]
+//        if temp <= pivotValue:
+//            array[i] = array[storeIndex]
+//            array[storeIndex] = temp
+//            storeIndex += 1
+//
+//    # move pivot to its final place
+//    array[right] = array[storeIndex]
+//    array[storeIndex] = pivotValue;
+//    return storeIndex;
+
+partition:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+
+	// Fill in your CODE here...
+	// preserve regs
+	PUSH(R1) //Array (Memory Address)
+	PUSH(R2) //Left
+	PUSH(R3) //Right
+	PUSH(R4) //PivotIndex
+	PUSH(R5) //PivotValue
+	PUSH(R6) //StoreIndex
+	PUSH(R7) //loop i
+	PUSH(R8) //temp
+	PUSH(R9) //scratch
+	PUSH(R10) //scratch2
+	// retrieve args
+	LD(BP, -12, R1) // array (address) -> R1
+	LD(BP, -16, R2) // left -> R2
+	LD(BP, -20, R3) // right -> R3
+	
+	// pivotIndex = (left+right) >> 1;
+	ADD(R2, R3, R0)
+	SRAC(R0, 1, R4)
+
+	SHLC(R4, 2, R0)
+	ADD(R0, R1, R0)
+	LD(R0, 0, R5)
+	
+	// r0 <= pivotIndex
+	SHLC(R3, 2, R9)
+	ADD(R1, R9, R9) 
+	LD(R9, 0, R10) 
+	// save into regs
+	ST(R5, 0, R9) 
+	ST(R10, 0, R0) 
+	
+	ADDC(R2, 0, R6)
+	
+	// loop
+	// set i as left
+	ADDC(R2, 0, R7)
+
+// FOR LOOP
+forloop:
+	// i < right (opposite)
+	CMPLT(R7, R3, R0)
+	// conditional branching 
+	BF(R0, loopDone, R31)
+	// temp <= array[i]
+	SHLC(R7, 2, R0)
+	ADD(R1, R0, R0)
+	LD(R0, 0, R8)
+	// if temp <= pivotValue:
+	CMPLE(R8, R5, R0)
+	BF(R0, loopincrement, R31)
+	// array[i] <= array[storeIndex]
+	// StoreIndex - r7
+	MULC(R6, 4, R0)
+	MOVE(r0, r31)
+	ADD(R1, R0, R0)
+	LD(R0, 0, R0)
+	MOVE(r0, r31)
+	MULC(R7, 4, R9)
+	ADD(R1, R9, R9)
+	ST(R0, 0, R9)
+	// array[storeIndex] = temp
+	MULC(R6, 4, R0)
+	ADD(R1, R0, R0)
+	
+	ST(R8, 0, R0)
+	// storeIndex += 1
+	ADDC(R6, 1, R6)
+	
+// updates the counter
+loopincrement:
+	ADDC(R7, 1, R7)
+	BR(forloop)
+	
+loopDone:
+	// array[right] = array[storeIndex]
+	// r7 and r8 in use
+	MULC(R6, 4, R7)
+	ADD(R1, R7, R7)
+	LD(R7, 0, R8)
+	MOVE(r0, r31)
+	MULC(R3, 4, R0)
+	ADD(R1, R0, R0)
+	ST(R8, 0, R0)
+	MOVE(r0, r31)
+	
+	// array[storeIndex] = pivotValue;
+	ST(R5, 0, R7)
+	
+	// return storeIndex;
+	MOVE(R6, R0)
+	
+	// Restore Registers
+	POP(R10)
+	POP(R9)
+	POP(R8)
+	POP(R7)
+	POP(R6)
+	POP(R5)
+	POP(R4)
+	POP(R3)
+	POP(R2)
+	POP(R1)
+	
+	// Finish Up
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+
+
+//def quicksort(array, left, right):
+//    if left < right:
+//        pivotIndex = partition(array,left,right)
+//        quicksort(array,left,pivotIndex-1)
+//        quicksort(array,pivotIndex+1,right)
+quicksort:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+
+	// Method body
+	MOVE(r0, r31)
+	// Save Regs
+	PUSH(R1)
+	PUSH(R2)
+	PUSH(R3)
+	PUSH(R4) // pivotIndex
+	
+	// Load args
+	// R1 <= array 
+	LD(BP, -12, R1)
+	// LEFT ARG -> R2
+	LD(BP, -16, R2)
+	// RIGHT ARG -> R3
+	LD(BP, -20, R3)
+	
+	// if branch 
+	CMPLT(R2, R3, R0)
+	BF(R0, sortDone, R31) // if we're done, just restore the state of the regs and return
+	
+	PUSH(R3)
+	PUSH(R2)
+	PUSH(R1)
+	BR(partition, LP)
+	MOVE(R0, R4)
+	DEALLOCATE(3)
+	MOVE(r0, r31)
+	
+	// recursive call i
+	SUBC(R4, 1, R0)
+	PUSH(R0)
+	PUSH(R2)
+	PUSH(R1)
+	MOVE(r0, r31)
+	BR(quicksort, LP)
+	DEALLOCATE(3)
+	
+	// recursive call ii
+	PUSH(R3)
+	ADDC(R4, 1, R0)
+	PUSH(R0)
+	PUSH(R1)
+	MOVE(r0, r31)
+
+	BR(quicksort, LP)
+	DEALLOCATE(3)
+	
+sortDone:
+
+	// Restore Registers
+	POP(R4)
+	POP(R3)
+	POP(R2)
+	POP(R1)
+	
+	// Finish Up
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+
+// Allocate a stack: SP is initialized by checkoff code.
+StackBasePtr:
+	LONG(StackArea)
+
+.unprotect
+
+StackArea:
+	STORAGE(1000)

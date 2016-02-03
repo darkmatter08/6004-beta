@@ -1,0 +1,5 @@
+for i in range(0,32):
+    print("X_mul_"+str(i+0)+" and2 "+"A["+str(31-i)+":0] B["+str(i)+"]#"+str(32-i)+" p["+str(i)+"]_["+str(31-i)+":0]")
+    
+for i in range(0,29):
+    print("X_mul_"+str(i+34)+" FA "+"s["+str(i+2)+"]_["+str(29-i)+":1] p"+str(i+3)+"_["+str(28-i)+":0] c"+str(i+3)+"_["+str(28-i)+":0] s"+str(i+3)+"_["+str(28-i)+":0] c"+str(i+3)+"_["+str(29-i)+":1]")

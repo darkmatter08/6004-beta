@@ -1,0 +1,39 @@
+symbols L R R2 D F
+
+states P Q // list of state names, first is starting state
+
+/**************************
+**** transitions: action state read state' write move
+**** state = current state of FSM
+**** read = symbol read from current cell
+**** state' = next state
+**** write = symbol to be written into the current cell
+**** move = movement direction (l = left, r = right, - = none)
+**************************/
+	
+action P   L    Q    D l
+action P   -     Q    0 l
+action P   0   *halt*  0 -
+action P   1     Q    1 -
+action P   F     P    D r
+action P   )     P    ) r
+action P   (     P    ( r
+action P   D     P    D r
+action P   R    P    R2 r
+
+action Q  (      Q   L l
+action Q  )      Q   R l
+action Q  L   *halt*   0 -
+action Q  D     Q    F  l
+action Q  1      Q    1 r
+action Q  0    *halt* 1 -
+action Q  F      Q    D r
+action Q  R2    Q   R l
+action Q  -      Q   1  r
+action Q  R     P   D r
+
+// P - Matched 
+// Q - Unmatched 
+// L - left paren matched
+// R - right paren matched
+// R2 - 

@@ -1,0 +1,849 @@
+
+<!-- saved from url=(0063)https://6004.mit.edu/ssldocs/online_labs.doit?lab=6&action=Load -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8"><style type="text/css"></style></head><body style="width: 600px;" marginwidth="5" marginheight="0">
+
+    <p><table bgcolor="#FFC000" width="100%" cellpadding="8"><tbody><tr>
+    <td align="left"><font size="4"><b>6.004 Lab 6</b></font></td>
+    </tr></tbody></table></p><p>
+    
+
+    <style>
+    body {
+      font: 16px/1.5 Georgia,serif;
+    }
+    tt {
+      font-size: 14px;
+    }
+    pre {
+      font-size: 14px;
+    }
+    pre.jsim {
+      margin: 10px;
+      padding: 10px;
+      background-color: rgb(255,253,227);
+    }
+    div.hint {
+      margin: 10px;
+      padding: 10px;
+      background-color: rgb(240,255,240);
+      border: 1px solid rgb(176,192,176);
+    }
+    </style>
+    </p><p><table cellpadding="3"><tbody><tr><td><b>Design check-in due:</b></td><td>Thursday, Apr 24, 2014</td></tr>
+       <tr><td><b>Check-off meeting due:</b></td><td>no check-off meeting required</td></tr></tbody></table>
+
+        </p><p><i>When you're done remember to save your work by clicking
+        on the "Save" button at the bottom of the page.  You can check
+        if your answers are correct by clicking on the "Check" button.</i></p><p>
+        <i>When entering numeric values in the answer fields, you can
+        use integers (1000), floating-point numbers (1000.0),
+        scientific notation (1e3), or JSim numeric scale factors (1K).</i></p><p>
+        </p><form method="post" action="https://6004.mit.edu/ssldocs/online_labs.doit">
+        <input type="hidden" name="lab" value="6">
+        <!-- start of generator output "/afs/csail.mit.edu/proj/courses/6.004/Spring14/records/course/assignments/lab6.xdoc" -->
+        
+
+
+<p>Useful links:
+</p><ul>
+<li><a href="http://6004.mit.edu/currentsemester/handouts/betadiagram.pdf" target="_blank">Unpipelined Beta (PDF)</a>
+</li><li><a href="http://6004.mit.edu/currentsemester/handouts/betainst.pdf" target="_blank">Summary of Instruction Formats (PDF)</a>
+</li><li><a href="http://6004.mit.edu/currentsemester/handouts/tool_docs/stdcell.html" target="_blank">6.004 Standard Cell Library</a>
+</li></ul>
+
+<p>Collaboration policy:
+</p><ul>
+It's okay to discuss the problem and solution approaches with others,
+but the code you submit for design problems should be your own
+work.  We ask that you list your collaborators when making a
+submission.
+</ul>
+
+<p></p><hr><p>
+
+  </p><p><u>Problem 1.</u>
+
+  For each of the following potential additions to the Beta
+  instruction set, fill in the table with the control signal settings
+  needed to execute these instructions on an unpipelined Beta.  Assume
+  the standard Beta datapath and control signals. Please choose "don't
+  care" if the value of control signal doesn't matter when executing
+  the instruction.
+
+  </p><ol type="A" start="1"><li>
+
+    
+    <b>Swap register contents with memory location</b>
+<pre>Usage:     MSWP (Ra, literal, Rc)
+Operation: PC &lt;- PC + 4
+           EA &lt;- Reg[Ra] + SEXT(literal)
+           tmp &lt;- Mem[EA]
+           Mem[EA] &lt;- Reg[Rc]
+           Reg[Rc] &lt;- tmp</pre>
+    
+    <p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ALUFN</label>:</b>&nbsp;<select name="1A1" size="1"><option>--select answer--</option><option>don't care</option><option>adder unit: A + B</option><option>adder unit: A - B</option><option>boole unit: A AND B</option><option>boole unit: A OR B</option><option>boole unit: A XOR B</option><option>boole unit: NOT A</option><option>boole unit: select A operand</option><option>boole unit: select B operand</option><option>shift unit: SHL</option><option>shift unit: SHR</option><option>shift unit: SRA</option><option>compare unit: CMPEQ</option><option>compare unit: CMPLT</option><option>compare unit: CMPLE</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WERF</label>:</b>&nbsp;<select name="1A2" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>BSEL</label>:</b>&nbsp;<select name="1A3" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WDSEL</label>:</b>&nbsp;<select name="1A4" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>2</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WR</label>:</b>&nbsp;<select name="1A5" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>RA2SEL</label>:</b>&nbsp;<select name="1A6" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>PCSEL</label>:</b>&nbsp;<select name="1A7" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option><option>2</option><option>3</option><option>4</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ASEL</label>:</b>&nbsp;<select name="1A8" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WASEL</label>:</b>&nbsp;<select name="1A9" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+  </p></li></ol>
+
+  <ol type="A" start="2"><li>
+
+    
+    <b>Move if zero</b>
+<pre>Usage:     MVZ (Ra, Rb, Rc)
+Operation: PC &lt;- PC + 4
+           if Reg[Ra] == 0 then Reg[Rc] &lt;- Reg[Rb]</pre>
+    
+    <p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ALUFN</label>:</b>&nbsp;<select name="1B1" size="1"><option>--select answer--</option><option>don't care</option><option>adder unit: A + B</option><option>adder unit: A - B</option><option>boole unit: A AND B</option><option>boole unit: A OR B</option><option>boole unit: A XOR B</option><option>boole unit: NOT A</option><option>boole unit: select A operand</option><option>boole unit: select B operand</option><option>shift unit: SHL</option><option>shift unit: SHR</option><option>shift unit: SRA</option><option>compare unit: CMPEQ</option><option>compare unit: CMPLT</option><option>compare unit: CMPLE</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WERF</label>:</b>&nbsp;<select name="1B2" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>BSEL</label>:</b>&nbsp;<select name="1B3" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WDSEL</label>:</b>&nbsp;<select name="1B4" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>2</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WR</label>:</b>&nbsp;<select name="1B5" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>RA2SEL</label>:</b>&nbsp;<select name="1B6" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>PCSEL</label>:</b>&nbsp;<select name="1B7" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option><option>2</option><option>3</option><option>4</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ASEL</label>:</b>&nbsp;<select name="1B8" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WASEL</label>:</b>&nbsp;<select name="1B9" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+  </p></li></ol>
+
+  <ol type="A" start="3"><li>
+
+    
+    <b>Move constant if zero</b><pre>    Usage:     MVZ (Ra, literal, Rc)
+    Operation: PC &lt;- PC + 4
+               if Reg[Ra] == 0 then Reg[Rc] &lt;- SEXT(literal)</pre>
+    
+    <p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ALUFN</label>:</b>&nbsp;<select name="1C1" size="1"><option>--select answer--</option><option>don't care</option><option>adder unit: A + B</option><option>adder unit: A - B</option><option>boole unit: A AND B</option><option>boole unit: A OR B</option><option>boole unit: A XOR B</option><option>boole unit: NOT A</option><option>boole unit: select A operand</option><option>boole unit: select B operand</option><option>shift unit: SHL</option><option>shift unit: SHR</option><option>shift unit: SRA</option><option>compare unit: CMPEQ</option><option>compare unit: CMPLT</option><option>compare unit: CMPLE</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WERF</label>:</b>&nbsp;<select name="1C2" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>BSEL</label>:</b>&nbsp;<select name="1C3" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WDSEL</label>:</b>&nbsp;<select name="1C4" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>2</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WR</label>:</b>&nbsp;<select name="1C5" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>RA2SEL</label>:</b>&nbsp;<select name="1C6" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>PCSEL</label>:</b>&nbsp;<select name="1C7" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option><option>2</option><option>3</option><option>4</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ASEL</label>:</b>&nbsp;<select name="1C8" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WASEL</label>:</b>&nbsp;<select name="1C9" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+  </p></li></ol>
+
+  <ol type="A" start="4"><li>
+
+    
+    <b>Load indexed</b><pre>    Usage:     LDX (Ra, Rb, Rc)
+    Operation: PC &lt;- PC + 4
+               Reg[Rc] &lt;- Mem[Reg[Ra] + Reg[Rb]]</pre>
+    
+    <p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ALUFN</label>:</b>&nbsp;<select name="1D1" size="1"><option>--select answer--</option><option>don't care</option><option>adder unit: A + B</option><option>adder unit: A - B</option><option>boole unit: A AND B</option><option>boole unit: A OR B</option><option>boole unit: A XOR B</option><option>boole unit: NOT A</option><option>boole unit: select A operand</option><option>boole unit: select B operand</option><option>shift unit: SHL</option><option>shift unit: SHR</option><option>shift unit: SRA</option><option>compare unit: CMPEQ</option><option>compare unit: CMPLT</option><option>compare unit: CMPLE</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WERF</label>:</b>&nbsp;<select name="1D2" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>BSEL</label>:</b>&nbsp;<select name="1D3" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WDSEL</label>:</b>&nbsp;<select name="1D4" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>2</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WR</label>:</b>&nbsp;<select name="1D5" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>RA2SEL</label>:</b>&nbsp;<select name="1D6" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>PCSEL</label>:</b>&nbsp;<select name="1D7" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option><option>2</option><option>3</option><option>4</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ASEL</label>:</b>&nbsp;<select name="1D8" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WASEL</label>:</b>&nbsp;<select name="1D9" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+  </p></li></ol>
+  
+
+  <p></p><hr><p><u>Problem 2.</u>
+
+  Ben Bitdiddle has proposed changing the adder unit of the Beta ALU
+  as shown in the following diagram.  His goal is to use the adder
+  unit to compute more than just "A+B" and "A-B".  The changes
+  include one additional inverter and three additional 2-input NAND
+  gates for each bit of the adder unit.  The "x32" appearing inside
+  the gate icons indicates that those gates are replicated 32 times to
+  handle all 32 bits of incoming data.
+
+  </p><p></p><center><img src="lab6_1.gif" border="0"></center>
+
+  <ol type="A" start="1"><li>
+
+    
+    For each of the eight possible values of the three control bits
+    OP[2:0] indicate what operation the revised adder unit will
+    perform.
+    
+    <p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b000</label>:</b>&nbsp;<select name="2A1" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b001</label>:</b>&nbsp;<select name="2A2" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b010</label>:</b>&nbsp;<select name="2A3" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b011</label>:</b>&nbsp;<select name="2A4" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b100</label>:</b>&nbsp;<select name="2A5" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b101</label>:</b>&nbsp;<select name="2A6" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b110</label>:</b>&nbsp;<select name="2A7" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>OP[2:0] = 0b111</label>:</b>&nbsp;<select name="2A8" size="1"><option>--select answer--</option><option>A</option><option>B</option><option>A+B</option><option>A-B</option><option>A+1</option><option>B+1</option><option>A-1</option><option>B-1</option><option>A+B+1</option><option>A+B-1</option><option>A-B+1</option><option>A-B-1</option><option>none of the above</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+  </p></li></ol>
+
+  <ol type="A" start="2"><li>
+
+    
+
+    To show off the capabilities of his new adder unit, Ben proposes
+    adding a LOOP instruction which combines branching and
+    decrementing in a single instruction.  Ben's theory is that the
+    SUB/BNE instructions that appear at the end of a FOR-loop can be
+    combined into a single LOOP instruction.  Here's his definition
+    for LOOP:
+
+    <pre>Usage:     LOOP(Ra, label, Rc)
+Operation: literal = ((OFFSET(label) - OFFSET(current inst))/4) - 1
+           PC &lt;- PC + 4
+           EA &lt;- PC + 4*SEXT(literal)
+           tmp &lt;- Reg[Ra]
+           Reg[Rc] &lt;- Reg[Ra] - 1
+           if tmp != 0 then PC &lt;- EA
+</pre>
+
+    The LOOP instruction behaves like a BNE in the sense that it
+    branches if Reg[Ra] is not zero.  But instead of saving the PC of
+    the following instruction in Rc, Reg[Ra]-1 is stored in Rc
+    instead.  The destination of the branch is determined as for all
+    branches: the literal field of the instruction is treated as a
+    word offset, so it is sign-extended, multiplied by four and added
+    to PC+4 to produce a new value for the PC.  Usually Ra and Rc
+    specify the same register.
+
+    <p>Consider the following instruction sequence:<br>
+</p><pre>    loop: ADD(R1,R2,R3)
+          LOOP(R4,loop,R4)
+          ...</pre>
+    Suppose R4 is initialized to 8 and then the two-instruction
+    sequence shown above is executed.
+    
+    <p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>How many times will the ADD instruction be executed?</label>:</b>&nbsp;<input type="text" size="20" maxlen="20" name="2B1" value=""></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>What value is in R4 when "..." is finally executed? Give
+             your answer as a decimal integer.</label>:</b>&nbsp;<input type="text" size="20" maxlen="20" name="2B2" value=""></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+  </p></li></ol>
+
+  <ol type="A" start="3"><li>
+
+    
+    Fill in the table with the control signal settings needed to
+    execute the LOOP instruction on an unpipelined Beta that includes
+    Ben's new adder unit.  Please choose "don't care" if the value
+    of control signal doesn't matter when executing LOOP.;
+    
+    <p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ALUFN</label>:</b>&nbsp;<select name="2C1" size="1"><option>--select answer--</option><option>don't care</option><option>adder unit: A + B</option><option>adder unit: A - B</option><option>adder unit: A</option><option>adder unit: A + 1</option><option>adder unit: A - 1</option><option>adder unit: A + B + 1</option><option>adder unit: A - B - 1</option><option>boole unit: A AND B</option><option>boole unit: A OR B</option><option>boole unit: A XOR B</option><option>boole unit: NOT A</option><option>boole unit: select A operand</option><option>boole unit: select B operand</option><option>shift unit: SHL</option><option>shift unit: SHR</option><option>shift unit: SRA</option><option>compare unit: CMPEQ</option><option>compare unit: CMPLT</option><option>compare unit: CMPLE</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WERF</label>:</b>&nbsp;<select name="2C2" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>BSEL</label>:</b>&nbsp;<select name="2C3" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WDSEL</label>:</b>&nbsp;<select name="2C4" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>2</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WR</label>:</b>&nbsp;<select name="2C5" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>RA2SEL</label>:</b>&nbsp;<select name="2C6" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>PCSEL</label>:</b>&nbsp;<select name="2C7" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option><option>2</option><option>3</option><option>4</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>ASEL</label>:</b>&nbsp;<select name="2C8" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+    </p><p><table width="95%" cellpadding="8"><tbody><tr><td align="right" bgcolor="#FFD9A1" width="*"><b><label>WASEL</label>:</b>&nbsp;<select name="2C9" size="1"><option>--select answer--</option><option>don't care</option><option>0</option><option>1</option><option>if Reg[Ra]==0 then 1 else 0</option><option>if Reg[Ra]==0 then 0 else 1</option></select></td><td width="22">&nbsp;</td></tr></tbody></table></p><p>
+  </p></li></ol>
+  
+
+<p></p><hr><p><u>Problem 3.</u> <b>Design Problem Part 1: "Basic Block" Beta</b>
+
+</p><p>The goal of this lab is to complete your Beta design.  We'll do it
+in two parts: first get the design to the point where it can execute a
+"basic block" of instructions, <i>i.e.</i>, a sequence of instructions
+that does not contain any branches or jumps.  In the second part,
+we'll add the circuitry to handle transfers of control (JMP, BNE,
+BEQ).  The following diagram of a simplified Beta that can execute
+basic blocks shows what needs to be done for the first step:
+
+</p><p></p><center><img src="lab6_10.png" width="600"></center>
+
+<p>It's probably best to tackle this part in stages.  Here are some
+step-by-step design notes keyed to the dotted-line boxes in the block
+diagram shown above.
+
+</p><p><b>Program Counter (PC)</b>
+
+</p><p>The 32-bit multiplexer selects the value to be loaded into the PC
+at next rising edge of the clock.  Eventually the mux will have inputs
+used for implementing branches, jumps, exceptions, etc. but for now
+use a two-input 32-bit mux that selects <tt>0x00000000</tt> when the RESET
+signal is asserted, and the output of the PC+4 logic when <tt>RESET</tt> is not
+asserted.  We will use the <tt>RESET</tt> signal to force the PC to zero during
+the first clock period of the simulation.
+
+</p><p>The PC is a separate 32-bit register that can be built using the
+dreg component from the parts library.  You should include hardware
+for the bottom two bits of the PC even though they are always 0; this
+will make debugging traces easier to interpret.
+
+</p><p>Conceptually, the increment-by-4 circuit is just a 32-bit
+ripple-carry adder with one input wired to the
+constant <tt>0x00000004</tt>.  You can implement it this way, but it
+is possible to build a much smaller circuit if you design an adder
+whose logic is optimized knowing that one of its inputs
+is <tt>0x00000004</tt>.
+
+</p><p>We've created a test jig to test your PC circuitry. Your initial
+netlist should look like:
+</p><pre class="jsim">// set up power supply node and logic thresholds
+.global vdd
+VDD vdd gnd 1.0v
+.options vil=0.2 vih=0.8
+
+.include "/shared/jsim/stdcell.jsim"
+.include "/shared/jsim/lab6pc.jsim"  // PC test jig
+
+.subckt pc clk reset ia[31:0]
+<i>... your mux/register/+4 circuit here ...</i>
+.ends
+</pre>
+Run a gate-level simulation: the test jig file will supply the
+appropriate inputs to the PC subcircuit.  After the simulation completes,
+click <button>Checkoff</button> to verify that the expected
+values appear on the <tt>ia[31:0]</tt> outputs.
+
+<div class="hint">
+Hint: What do I do when the verification fails?
+
+<p>The failure notification will tell you which signal failed
+verification and the simulated time at which the mismatch between the
+actual value and expected occurred.  The tests are actually a sequence
+of 100ns testing cycles and the reported time will be at the
+end of one of the cycles when the output values are checked for
+correctness.
+
+</p><p>Move your mouse over the plot of the appropriate signal waveform
+until the vertical time cursor is approximately at the failure time.
+Then double-click to zoom in on the plots around that particular time;
+zoom in enough so that all the signals for that testing cycle are
+readable.  Now you can figure out what the circuit was being asked to
+do for that particular test and, hopefully, deduce why your circuit is
+producing an incorrect output.
+</p></div>
+
+<p><b>Register File (REGFILE)</b>
+
+</p><p>The register file is a 3-port memory.  Here's a template netlist
+for specifying the 3-port register file:
+</p><pre class="jsim">Gregfile memory
++ vdd gnd gnd  ra[4:0]     adata[31:0] // A read port
++ vdd gnd gnd  ra2mux[4:0] bdata[31:0] // B read port
++ gnd clk werf rc[4:0]     wdata[31:0] // write port
++ width=32 nlocations=31
+</pre>
+
+The write-up for the Standard Cell library has more
+<a href="http://6004.mit.edu/currentsemester/handouts/tool_docs/stdcell.html#memory" target="_blank">
+documentation for the <tt>memory</tt> component.</a> Note that the
+memory component doesn't know that location 31 of the register file
+should always read as zero, so you'll have to add additional logic
+around the memory that makes this happen.  You can use muxes or ANDs
+to force the register data for each read port to "0" when the port
+address = <tt>0b11111</tt> (<i>i.e.</i>, R31).  And you'll need a mux controlled by
+<tt>RA2SEL</tt> to select the correct address for the B read port.  We've
+created a test jig to test your register file circuitry -- change the test
+jig include statement to 
+<pre class="jsim">.include "/shared/jsim/lab6regfile.jsim"
+</pre>
+and add the following subcircuit definition to your growing design
+file:
+<pre class="jsim">.subckt regfile clk werf ra2sel ra[4:0] rb[4:0] rc[4:0]
++ wdata[31:0] radata[31:0] rbdata[31:0]
+<i>... 3-port memory and other register file circuitry here ...</i>
+.ends
+</pre>
+Perform a gate-level simulation and click <button>Checkoff</button> to
+verify that your register file correctly performs reads and writes and
+that <tt>R31</tt> always reads as 0.
+
+<p><b>Control Logic (CTL)</b>
+
+</p><p>The control logic should be tailored to generate the control
+signals your logic requires, which may differ from what's shown in the
+block diagram above.  Note that a ROM can be built by specifying a memory
+with just one read port; the ROM contents are set up using the
+contents keyword in the netlist description of the memory.  For
+example, the netlist for a ROM that uses the opcode field of the
+instruction to lookup the values for 17 control signals might look
+like:
+</p><pre class="jsim">Gctl memory vdd gnd gnd id[31:26]    // one read port
++ pcsel[2:0] wasel asel ra2sel bsel alufn[4:0] wdsel[1:0] werf moe xwr
++ width=17 nlocations=64 contents=(
++  0b00000000000000000         // opcode=0b000000
++  0b00000000000000000         // opcode=0b000001
++ ...
++ )
+</pre>
+
+<div class="hint">
+Hint: You'll find the appropriate settings for the ROM bits in the
+Control Logic table at the bottom of the
+<a href="http://6004.mit.edu/currentsemester/handouts/betadiagram.pdf" target="_blank">Unpipelined Beta diagram</a>.
+The mapping from opcode bits to instructions is available from the
+<a href="http://6004.mit.edu/currentsemester/handouts/betainst.pdf" target="_blank">Summary of Instruction Formats</a>.
+</div>
+
+<p>Most of the signals generated by the CTL subcircuit can connected
+directly to the appropriate logic, e.g., <tt>ALUFN[4:0]</tt> can
+connect directly to the ALUFN inputs of your ALU.  During this step,
+we won't be using <tt>PCSEL[2:0]</tt>, <tt>WASEL</tt>
+or <tt>ASEL</tt>, so you can set the corresponding bits in each ROM
+location to zero.  We do need to be careful with the write enable
+signal for main memory (<tt>WR</tt>), which needs to be valid even
+before the first instruction is fetched from memory.  So you should
+include some <b>additional logic that forces WR to 0 when RESET=1</b>
+-- the signal <tt>XWR</tt> from the ROM needs to combined
+appropriately with <tt>RESET</tt> to form <tt>WR</tt>.  <tt>MOE</tt>
+is another memory control signal; see the next section for more
+information.
+
+</p><p>We'll be adding more bits to the control ROM when the branch logic
+is added in the next lab.  For this lab, your design should implement
+the following instructions:
+
+</p><p></p><ul style="margin-left: 1em;">
+LD, ST,<br>
+ADD, SUB, CMPEQ, CMPLT, CMPLE,<br>
+AND, OR, XOR, XNOR, SHL, SHR, SRA,<br>
+ADDC, SUBC, CMPEQC, CMPLTC, CMPLEC,<br>
+ANDC, ORC, XORC, XNORC, SHLC, SHRC, SRAC
+</ul>
+
+<p>Eventually unimplemented instructions will cause an exception, but
+for now turn them into NOPs by making sure <tt>WERF</tt>
+and <tt>XWR</tt> are set to 0 (preventing any value from being written
+into a destination register or main memory).
+
+</p><p>If you've followed the scheme outlined above, we've created a test
+jig to test your control circuitry -- change the test
+jig include statement to 
+</p><pre class="jsim">.include "/shared/jsim/lab6ctl.jsim"
+</pre>
+and add the following subcircuit definition to your growing design
+file:
+<pre class="jsim">.subckt ctl reset id[31:26] ra2sel bsel alufn[4:0] wdsel[1:0] werf moe wr
+<i>... your control ROM and other circuitry here ...</i>
+.ends
+</pre>
+Perform a gate-level simulation then click <button>Checkoff</button> to
+verify that your control logic produces the correct control signals
+for each Beta opcode.
+
+<p><b>Everything else</b>
+
+</p><p>Now it's time to put it all together. Start by adding the definitions
+of your ALU subcircuit and its components from Lab 3.
+
+</p><div class="hint">
+Hint: you can use a <tt>.include</tt> statement to incorporate your
+Lab 3 design file into your Beta design, but you'll have to comment
+out the power supply definition lines at the beginning of the Lab 3 file to
+avoid multiple-definition errors.  Also comment out any <tt>.include</tt>
+statements since we don't want to include the Lab 3 checkoff statements
+or a second copy of the standard cell library.
+
+<p>The most elegant approach is to have a separate alu.jsim file for
+the ALU subcircuit definitions, which is then included by both the Lab 3
+and Lab 6 design files.
+</p></div>
+
+<div class="hint">
+Hint: The Lab 6 checkoff code does not need the optional multiplier
+circuitry from Lab 3.  <i>Your simulation will run much more quickly if
+you comment out the multiplier circuitry</i> in your ARITH subcircuit and
+simply connect <tt>gnd</tt> to the multiply inputs of the mux that
+chooses between the adder and multiplier values.
+</div>
+
+Change the test jig include statement to
+<pre class="jsim">.include "/shared/jsim/lab6basicblock.jsim"
+</pre>
+The test jig supplies the 3-port main memory (instruction
+read, data read, data write).  The memory is initialized with a
+Beta test program (/shared/bsim/lab6basicblock.uasm).
+
+<p>Add the following subcircuit definition to your growing design
+file:
+</p><pre class="jsim">.subckt beta clk reset ia[31:0] id[31:0] ma[31:0] moe mrd[31:0] wr mwd[31:0]
+<i>... your circuitry here ...</i>
+.ends
+</pre>
+This implementation of the Beta subcircuit has the following terminals:
+
+<p><table cellpadding="3" style="border-collapse:collapse" border="1">
+<tbody><tr>
+  <td><tt>clk</tt></td>
+  <td>input</td>
+  <td>
+    clock (from test circuitry): a 10MHz square wave creating a 100ns
+    clock period.
+  </td>
+</tr>
+<tr>
+  <td><tt>reset</tt></td>
+  <td>input</td>
+  <td>
+    reset (from test circuitry): set by the test circuitry to 1 until
+    after the first rising edge of <tt>clk</tt>, then set to 0 to start
+    the Beta running.
+  </td>
+</tr>
+<tr>
+  <td><tt>ia[31:0]</tt></td>
+  <td>outputs</td>
+  <td>
+    instruction address (from PC register): address of the next
+    instruction to be executed.  This sent to the first read port of
+    main memory.
+  </td>
+</tr>
+<tr>
+  <td><tt>id[31:0]</tt></td>
+  <td>inputs</td>
+  <td>
+    instruction data (from test circuitry).  After the appropriate
+    propagation delay, the main memory will drive these signals with the
+    contents of the memory location specified by <tt>ia[31:0]</tt>.
+  </td>
+</tr>
+<tr>
+  <td><tt>ma[31:0]</tt></td>
+  <td>outputs</td>
+  <td>
+    memory data address (from ALU): address of data location in main
+    memory to be read or written.  This is sent to second read port
+    of main memory.
+  </td>
+</tr>
+<tr>
+  <td><tt>mrd[31:0]</tt></td>
+  <td>inputs</td>
+  <td>
+    memory read data (from test circuitry): if <tt>moe</tt> is 1, the
+    main memory will drive these signals with the contents of the
+    memory location specified by <tt>ma[31:0]</tt>.
+  </td>
+</tr>
+<tr>
+  <td><tt>moe</tt></td>
+  <td>output</td>
+  <td>
+    memory read data output enable (from control logic): should be set
+    to 1 when the Beta want to read the contents of the memory location
+    specified by <tt>ma[31:0]</tt>.
+  </td>
+</tr>
+<tr>
+  <td><tt>mwd[31:0]</tt></td>
+  <td>outputs</td>
+  <td>
+    memory write data (from register file): if <tt>wr</tt> is 1, this
+    is the data that will be written into memory location <tt>ma[31:0]</tt>
+    at the end of the current cycle.
+  </td>
+</tr>
+<tr>
+  <td><tt>wr</tt></td>
+  <td>output</td>
+  <td>
+    memory write enable (from control logic): Set to 1 when the Beta
+    wants to store into the memory location specified by <tt>ma[31:0]</tt> at
+    the end of the current cycle.  <b>NOTE: this signal should always
+    have a valid logic value at the rising edge of CLK</b> otherwise the
+    contents of the memory will be erased.  You'll need to take care
+    in designing the logic that generates this signal -- see the CTL
+    section above for details.
+  </td>
+</tr>
+</tbody></table>
+
+</p><p>Next step: add the appropriate statements to the Beta subcircuit
+to create connections shown in the block diagram above.  You'll need
+instances of your PC, CTL, REGFILE and ALU subcircuits along with the
+following:
+
+</p><p></p><ul>
+<tt>bsel</tt> mux: The low-order 16 bits of the instruction need to be
+sign-extended to 32 bits.  Sign-extension is easy in hardware!  Just
+connect <tt>id[15:0]</tt> to the low-order sixteen <tt>D1</tt> inputs
+of the mux and <tt>id[15]</tt> to each of the high-order sixteen
+<tt>D1</tt> inputs.
+
+<p><tt>wdsel</tt> mux: In the final design the 32-bit <tt>wdsel</tt>
+multiplexer will select the data to be written into the register file
+from one of three possible sources.  For this part, there are only two
+choices: the output of the ALU (<tt>WDSEL</tt> = <tt>0b01</tt>) and
+read data from main memory (<i>i.e.</i>, the data on <tt>mrd[31:0]</tt>,
+<tt>WDSEL</tt> = <tt>0b10</tt>).
+
+</p><div class="hint">
+Hint: Most designs use a <tt>mux4</tt> gate to implement the <tt>wdsel</tt>
+mux.  The most common mistake in Lab 6 is incorrectly specifying
+the select signals for the <tt>mux4</tt> component.  You'll want
+something like:
+<pre>     Xwdsel_mux mux4 wdsel[0]#32 wdsel[1]#32 ...</pre>
+Look closely at the specification for the <tt>mux4</tt> in the
+documentation for the standard cell library.
+</div>
+
+</ul>
+
+When you're ready to test your design, do a gate-level simulation to
+have your Beta execute the test program and
+click <button>Checkoff</button> to verify that the correct output
+values are generated each cycle.  The test program computes a "magic
+number" using a sequence of operations that tests the various pieces
+of your design.  The program writes out a series of results into
+memory location <tt>0x3FC</tt>; look at lab6basicblock.uasm to see
+what values are written on which cycles.
+
+<p>lab6basicblock.jsim will verify that the instruction address
+<tt>ia[31:0]</tt>, memory address <tt>ma[31:0]</tt>, memory write data <tt>mwd[31:0]</tt>
+and the memory control signals (moe, wr) have the correct values each
+cycle.  The check is made just before the rising clock edge, <i>i.e.</i>,
+after the current instruction has been fetched and executed, but just
+before the result is written into the register file.  Note that
+<tt>ma[31:0]</tt> is the output of the ALU, so these checks can verify that all
+instructions are working correctly.  If you get a verification error,
+check the instruction that has just finished executing at the time
+reported in the error message -- your Beta has executed that
+instruction incorrectly for some reason.
+
+</p><p>Whew! All done with Part 1 :)
+
+
+
+</p><p></p><hr><p><u>Problem 4.</u> <b>Design Problem Part 2: Complete Beta</b>
+
+</p><p>In this part you'll complete the implementation of your Beta.
+We'll take the block diagram from Part 1 and add the remaining logic:
+
+</p><p></p><center><img src="lab6_11.png" width="600"></center>
+
+<p>Again it's best to tackle the work in stages.  Here are some
+design notes keyed to the block diagram shown above:
+
+</p><ol type="A">
+
+<p></p><li> Since the standard cell library doesn't have any 5-input
+multiplexers, you'll have to construct the logic that selects the next
+PC using other components and adjust the control logic accordingly.
+Remember to add a way to set the PC to zero on reset (see part F).
+"XAdr" and "ILL OP" in the block diagram represent constant addresses
+used when the Beta services an interrupt (triggered by <tt>irq</tt>) or
+executes an instruction with an illegal or unimplemented opcode.  For
+this assignment assume that XAdr=8 and ILLOP=4 and we'll make sure the
+first three locations of main memory contain <tt>BR</tt> instructions that
+branch to code which handle reset, illegal instruction traps and
+interrupts respectively.  In other words, the first three locations of
+main memory contain:
+<pre>     Mem[0x00000000] = BR(reset_handler)
+     Mem[0x00000004] = BR(illop_handler)
+     Mem[0x00000008] = BR(interrupt_handler)
+</pre>
+
+<b>Note on supervisor bit</b>: The high-order bit of the
+PC, <tt>ia[31]</tt>, is dedicated as the "Supervisor" bit (see section
+6.3 of the Beta Documentation).  Instruction fetch and the LDR
+instruction ignore this bit, treating it as if it were zero.  The JMP
+instruction is allowed to clear the Supervisor bit or leave it
+unchanged, but cannot set it, and no other instructions may have any
+effect on it.  Only reset, exceptions and interrupts cause the
+Supervisor bit to become set.  This has the following implications for
+your Beta design:
+
+<ol type="1">
+
+<p></p><li><tt>0x80000000</tt>, <tt>0x80000004</tt>
+and <tt>0x80000008</tt> are loaded into the PC during reset,
+exceptions and interrupts respectively.  This is the only way that the
+supervisor bit gets set.  Note that after reset the Beta starts
+execution in supervisor mode.
+</li>
+
+<p></p><li>Bit 31 of the PC+4 and branch-offset inputs to
+the <tt>pcsel</tt> mux should be connected to <tt>ia[31]</tt>, i.e., the value of
+the supervisor bit doesn't change when executing most instructions.
+</li>
+
+<p></p><li>You'll have to add logic to bit 31 of the <tt>JT</tt> input to the
+<tt>pcsel</tt> mux to ensure that <tt>JMP</tt> instruction can only clear or leave the
+supervisor bit unchanged.  Heres a table showing the new value of the
+supervisor bit after a <tt>JMP</tt> as function of <tt>JT[31]</tt> and the current value
+of the supervisor bit (<tt>ia[31]</tt>):
+<pre>     old ia[31]   JT[31]   new ia[31]
+        0           --         0
+        1           0          0
+        1           1          1
+</pre>
+</li>
+
+<p></p><li>Bit 31 of the branch-offset input to the <tt>asel</tt> mux should be
+set to 0 -- the supervisor bit is ignored when doing address arithmetic
+for the <tt>LDR</tt> instruction.
+</li>
+
+<p></p><li>Bit 31 of the PC+4 input to the <tt>wdsel</tt> mux should connect to
+<tt>ia[31]</tt>, saving the current value of the supervisor whenever the value of
+the PC is saved by a branch instruction or trap.
+</li>
+
+</ol>
+</li>
+
+<p></p><li> The 5-bit 2-to-1 <tt>wasel</tt> multiplexer determines the
+write address for the register file.  Note: you should change your
+REGFILE to have separate inputs for the register file write
+address <tt>waddr[4:0]</tt> and <tt>rc[4:0]</tt> since you'll need the
+original <tt>RC</tt> field from the instruction for use by
+the <tt>ra2sel</tt> mux.
+</li>
+
+<p></p><li>The branch-offset adder adds PC+4 to the 16-bit offset encoded
+in the instruction.  The offset is sign-extended to 32-bits and
+multiplied by 4 in preparation for the addition.  Both the sign
+extension and shift operations can be done with appropriate wiring -- no
+gates required!
+</li>
+
+<p></p><li>The <tt>asel</tt> multiplexer and the <tt>Z</tt> logic are
+added to the output of <tt>RA1/RD1</tt> port of the register file.
+This port is also wired directly to the <tt>JT</tt> inputs of
+the <tt>pcsel</tt> multiplexer (remember to force the low-order two
+bits to zero and to add supervisor bit logic to bit 31!).
+</li>
+
+<p></p><li>The <tt>wdsel</tt> multiplexer is expanded to 3 inputs so that
+PC+4 can be stored in the register file during execution of <tt>BEQ</tt>, <tt>BNE</tt>,
+<tt>JMP</tt> and exceptions.  Note that the supervisor
+bit <tt>ia[31]</tt> is saved away along with the rest of the PC.
+</li>
+
+<p></p><li> The control logic should be tailored to generate the control
+signals your logic requires, which may differ from what's shown in the
+diagram above.  The new logic we've added requires the generation of
+several new control signals:
+
+<p><table cellpadding="3" style="border-collapse: collapse;" border="1">
+<tbody><tr>
+  <td><tt>pcsel[2:0]</tt></td>
+  <td>determines the next value of PC</td>
+</tr>
+<tr>
+  <td><tt>asel</tt></td>
+  <td>control signal for <tt>asel</tt> mux on the <tt>A</tt> input of the ALU (used by the <tt>LDR</tt> instruction)</td>
+</tr>
+<tr>
+  <td><tt>wdsel[1:0]</tt></td>
+  <td>expanded to include the third (PC+4) input</td>
+</tr>
+<tr>
+  <td><tt>wasel</tt></td>
+  <td>selects <tt>XP</tt> as the destination register during exceptions</td>
+</tr>
+</tbody></table>
+
+</p><p>This version of the Beta should add the <tt>LDR</tt>, <tt>JMP</tt>,
+<tt>BNE</tt>, and <tt>BEQ</tt> instructions; when implementing the
+latter two instructions the PCSEL signals are determined using the <tt>Z</tt>
+signal (<tt>Z</tt> = 1 when the value of Reg[Ra] is zero).  If you are using a
+ROM-based implementation, you can make <tt>Z</tt> an additional address input
+to the ROM (doubling its size).  A more economical implementation
+might use external logic to modify the value of the PCSEL signals.
+
+</p><p>An interrupt-request <tt>irq</tt> input has been added to the
+Beta.  When this signal is 1 and the Beta is in "user mode" (<tt>ia[31]</tt> is
+zero), an interrupt should occur.  Asserting <tt>irq</tt> should have no effect
+when in "supervisor mode" (<tt>ia[31]</tt> is one).  You should add logic that
+causes the Beta to abort the current instruction and save the current
+PC+4 in register <tt>XP</tt> and to set the PC to <tt>0x80000008</tt>.  In other words,
+an interrupt forces the following:
+
+</p><ol type="1">
+
+<li><tt>pcsel</tt> to 4 (select <tt>0x80000008</tt> as the next PC)</li>
+
+<li><tt>wasel</tt> to 1 (select <tt>XP</tt> as the register file write address)</li>
+
+<li><tt>werf</tt> to 1 (write into the register file)</li>
+
+<li><tt>wdsel</tt> to 0 (select PC+4 as the data to be written into the register file)</li>
+
+<li><tt>wr</tt> to 0 (this ensures that if the interrupted instruction
+was a ST that it doesn't get to write into main memory).  Note that
+you'll also want to add logic to reset the Beta; at the very least
+when reset is asserted you'll need to force the PC to <tt>0x80000000</tt> and
+ensure that <tt>wr</tt> is 0 (to prevent your initialized main memory from
+being overwritten).</li>
+
+</ol>
+
+<p>Your design should implement all the instructions listed in the
+Beta Documentation, except for <tt>MUL</tt>, <tt>MULC</tt>, <tt>DIV</tt> and <tt>DIVC</tt>, which
+are optional.  Unimplemented instructions should cause an exception as
+outlined in part (A) above.
+</p></li>
+
+</ol>
+
+When you've completed your design, change the test jig include
+statement to
+<pre class="jsim">.include "/shared/jsim/lab6checkoff.jsim"
+</pre>
+and run a gate-level simulation to test your circuit and complete
+the online check-in.  The checkoff test jig uses the following
+circuit to test your Beta:
+<pre class="jsim">Xbeta beta clk reset irq ia[31:0] id[31:0] ma[31:0] moe mrd[31:0] wr mwd[31:0]
+
+// memory is loaded with /shared/bsim/lab6checkoff.uasm
+Gmem memory
++ vdd gnd gnd ia[11:2] id[31:0]
++ moe gnd gnd ma[11:2] mrd[31:0]
++ gnd clk wr ma[11:2] mwd[31:0]
++ width=32 nlocations=1024 contents=(
++ <i>... binary represenation of lab6checkoff.uasm...</i>
++ )
+
+Vclk clk gnd clock(1,0,100ns)     // 10MHz square wave
+Vreset reset gnd step(1,0,101ns)  // assert reset for 1 clock cycle
+
+// assert irq signal twice.  The first time irq is asserted it should
+// have no effect (Beta is in supervisor mode).  irq is asserted the
+// second time just *before* the instruction at ixp: is executed and
+// interupt should occur at that point.
+Virq irq gnd pwl(0ns 0v, 1001ns 0v,
++ 1001.1ns 1.0v,
++ 1101ns 1.0v,
++ 1101.1ns 0v,
++ 26501ns 0v,
++ 26501.1ns 1.0v,
++ 26601ns 1.0v,
++ 26601.1ns 0v
++)
+</pre>
+Lab6checkoff.jsim will verify that the instruction address <tt>ia[31:0]</tt>,
+memory address <tt>ma[31:0]</tt>, memory write data <tt>mwd[31:0]</tt> and the
+memory control signals <tt>moe, wr</tt> have the correct values each cycle.
+The check is made just before the rising clock edge, i.e., after the
+current instruction has been fetched and executed, but just before the
+result is written into the register file.  Note that <tt>ma[31:0]</tt> is the
+output of the ALU, so these checks can verify that all instructions
+are working correctly.  If you get a verification error, check the
+instruction that has just finished executing at the time reported in
+the error message -- the Beta has executed that instruction incorrectly
+for some reason.
+
+<p>Almost nobody's design executes the checkoff program correctly the
+first time -- it will take some effort to debug your design, but stick
+with it.  If you're stuck, get help from your fellow students or the
+course staff.  When it works, congratulations! The design of a
+complete CPU at the gate level is a significant accomplishment.  Of
+course, now the fun is just beginning -- there are undoubtedly many ways
+you can make improvements, both large and small.
+
+</p><p>Good luck!
+
+
+
+
+<!-- end of generator output "/afs/csail.mit.edu/proj/courses/6.004/Spring14/records/course/assignments/lab6.xdoc" -->
+
+        </p><p><input type="submit" name="action" value="Check">
+        <input type="submit" name="action" value="Save"></p></form>
+        
+<p><font size="1"><i>source: online_labs.doit, lab6.xdoc</i></font></p>
+
+</body></html>

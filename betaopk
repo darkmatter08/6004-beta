@@ -1,0 +1,243 @@
+.global vdd
+VDD vdd gnd 1.0v
+.options vil=0.2 vih=0.8
+
+.include "/shared/jsim/stdcell.jsim"
+.include "/shared/jsim/lab6checkoff.jsim"
+.include "alu"
+
+// BETA
+
+.subckt beta clk reset irq ia[31:0] id[31:0] ma[31:0] moe mrd[31:0] wr mwd[31:0] 
+
+Xconnect_rc connect id[25:21] rc[4:0] // Reg C
+Xconnect_ra connect id[20:16] ra[4:0] // Reg A
+Xconnect_rb connect id[15:11] rb[4:0] // Reg B
+Xconnect_const connect id[15:0] sext[15:0] // 16-Bit Constant
+Xconnect_sext connect sext[15]#16 sext[31:16] // SXT 32-Bit
+
+X_BSEL mux2 bsel#32 rbdata[31:0] sext[31:0] b[31:0] // Chose Reg B or SXT(C) (32-Bit)
+Xjt_low2 connect jt[1:0] gnd#2 // Force JT 2 Low-Order Bits to 0 (byte addressing)
+Xrad_jt connect radata[31:2] jt[31:2] // JT connects to radata
+Xconnect_rb_mwd connect rbdata[31:0] mwd[31:0] // Memory write port connects to Reg B data 
+Xconnect_out_ma connect out[31:0] ma[31:0] // ALU Output to Memory Address
+XWDSEL mux4 wdsel[0]#32 wdsel[1]#32 pc4[31:0] out[31:0] mrd[31:0] gnd#32 wdata[31:0] // WDSEL Memory Data or ALU Data or PC+4 ~ E
+XASEL mux2 asel#32 radata[31:0] offset[31:0] a[31:0] // ALU A Select Between Register A and PC Offset ~ D
+
+// IRQ
+X_irq_inv inverter irq notIrq
+X_execIRQ nor2 ia[31] notIrq doIRQ
+
+// Instantiate Beta Components
+XPC pc clk reset pcsel[2:0] jt[31:0] sext[31:0]
++ ia[31:0] pc4[31:0] offset[31:0]
+XRF regfile clk werf ra2sel wasel ra[4:0] rb[4:0] rc[4:0]
++ wdata[31:0] radata[31:0] rbdata[31:0] zrf
+XCTL ctl reset id[31:26] doIRQ zrf 
++ pcsel[2:0] wasel asel ra2sel bsel alufn[4:0] wdsel[1:0] werf moe wr
+XALU alu alufn[4:0] a[31:0] b[31:0] 
++ out[31:0] z v n
+
+.ends
+
+// CONTROL LOGIC
+.subckt ctl reset id[31:26] doIRQ z pcsel[2:0] wasel asel ra2sel bsel alufn[4:0] wdsel[1:0] werf moe wr
+
+// Reset Control
+Xreset_wr mux2 reset xwr gnd mwr
+
+// Z Logic ~ F
+Xzinv inverter z zinv
+Xnot_branch nand2 mpcsel[2] mpcsel[1] not_branch // Branch OPCODE if MPCSEL = 11_
+Xzmux mux2 mpcsel[0] zinv z zres // MPCSEL[0] = 0 for BNE, 1 for BEQ --> output Z result (Z or not Z)
+Xbranch_muxA mux2 not_branch zres mpcsel[0] bpcsel[0] // Set Appropriate Z for Branch Operation (otherwise leave alone)
+Xbranch_muxB mux2 not_branch#2 gnd#2 mpcsel[2:1] bpcsel[2:1] // Set PCSEL[2:1] to 0 for Branch Operation (otherwise leave alone)
+
+// IRQ ~ F
+Xirq_pcselA mux2 doIRQ bpcsel[2] vdd pcsel[2]
+Xirq_pcselB mux2 doIRQ#2 bpcsel[1:0] gnd#2 pcsel[1:0]
+Xirq_wasel mux2 doIRQ mwasel vdd wasel
+Xirq_werf mux2 doIRQ mwerf vdd werf
+Xirq_wdsel mux2 doIRQ#2 mwdsel[1:0] gnd#2 wdsel[1:0]
+Xirq_wr mux2 doIRQ mwr gnd wr
+
+// ROM for OPCODES and Outputs
+Gctl memory vdd gnd gnd id[31:26]    // one read port
++ mpcsel[2:0] mwasel asel ra2sel bsel alufn[4:0] mwdsel[1:0] mwerf moe xwr
++ width=17 nlocations=64 contents=(
++ 0b01110000000000100 // opcode=0b000000 NONE
++ 0b01110000000000100 // opcode=0b000001 NONE
++ 0b01110000000000100 // opcode=0b000010 NONE
++ 0b01110000000000100 // opcode=0b000011 NONE
++ 0b01110000000000100 // opcode=0b000100 NONE
++ 0b01110000000000100 // opcode=0b000101 NONE
++ 0b01110000000000100 // opcode=0b000110 NONE
++ 0b01110000000000100 // opcode=0b000111 NONE
++ 0b01110000000000100 // opcode=0b001000 NONE
++ 0b01110000000000100 // opcode=0b001001 NONE
++ 0b01110000000000100 // opcode=0b001010 NONE
++ 0b01110000000000100 // opcode=0b001011 NONE
++ 0b01110000000000100 // opcode=0b001100 NONE
++ 0b01110000000000100 // opcode=0b001101 NONE
++ 0b01110000000000100 // opcode=0b001110 NONE
++ 0b01110000000000100 // opcode=0b001111 NONE
++ 0b01110000000000100 // opcode=0b010000 NONE
++ 0b01110000000000100 // opcode=0b010001 NONE
++ 0b01110000000000100 // opcode=0b010010 NONE
++ 0b01110000000000100 // opcode=0b010011 NONE
++ 0b01110000000000100 // opcode=0b010100 NONE
++ 0b01110000000000100 // opcode=0b010101 NONE
++ 0b01110000000000100 // opcode=0b010110 NONE
++ 0b01110000000000100 // opcode=0b010111 NONE
++ 0b00000010000010110 // opcode=0b011000 LD
++ 0b00000110000000001 // opcode=0b011001 ST
++ 0b01110000000000100 // opcode=0b011010 NONE
++ 0b01000000000000100 // opcode=0b011011 JMP ~ F
++ 0b11100000000000100 // opcode=0b011100 BEQ* - PCSEL FOR Z ~ F
++ 0b11000000000000100 // opcode=0b011101 BNE* - PCSEL FOR NOT Z ~ F
++ 0b01110000000000100 // opcode=0b011110 NONE
++ 0b00001001101010110 // opcode=0b011111 LDR ~ F
++ 0b00000000000001100 // opcode=0b100000 ADD
++ 0b00000000000101100 // opcode=0b100001 SUB
++ 0b00000000001001100 // opcode=0b100010 MUL*
++ 0b00000000001101100 // opcode=0b100011 DIV*
++ 0b00000000010101100 // opcode=0b100100 CMPEQ
++ 0b00000000011101100 // opcode=0b100101 CMPLT
++ 0b00000000110101100 // opcode=0b100110 CMPLE
++ 0b01110000000000100 // opcode=0b100111 NONE
++ 0b00000001100001100 // opcode=0b101000 AND
++ 0b00000001111001100 // opcode=0b101001 OR
++ 0b00000001011001100 // opcode=0b101010 XOR
++ 0b00000001100101100 // opcode=0b101011 XNOR
++ 0b00000000100001100 // opcode=0b101100 SHL
++ 0b00000000100101100 // opcode=0b101101 SHR
++ 0b00000000101101100 // opcode=0b101110 SRA
++ 0b01110000000000100 // opcode=0b101111 NONE
++ 0b00000010000001100 // opcode=0b100000 ADDC
++ 0b00000010000101100 // opcode=0b100001 SUBC
++ 0b00000010001001100 // opcode=0b100010 MULC* - OPTIONAL
++ 0b00000010001101100 // opcode=0b100011 DIVC* - OPTIONAL
++ 0b00000010010101100 // opcode=0b100100 CMPEQC
++ 0b00000010011101100 // opcode=0b100101 CMPLTC
++ 0b00000010110101100 // opcode=0b100110 CMPLEC
++ 0b01110000000000100 // opcode=0b100111 NONE
++ 0b00000011100001100 // opcode=0b101000 ANDC
++ 0b00000011111001100 // opcode=0b101001 ORC
++ 0b00000011011001100 // opcode=0b101010 XORC
++ 0b00000011100101100 // opcode=0b101011 XNORC
++ 0b00000010100001100 // opcode=0b101100 SHLC
++ 0b00000010100101100 // opcode=0b101101 SHRC
++ 0b00000010101101100 // opcode=0b101110 SRAC
++ 0b01110000000000100 // opcode=0b101111 NONE
++ )
+.ends
+
+// PROGRAM COUNTER
+.subckt pc clk reset pcsel[2:0] jt[31:0] sxt_c[31:0]
++ ia[31:0] plus4[31:0] offset[31:0]
+
+// Which PC Value
+XpcselA mux5 pcsel[0] pcsel[1] pcsel[2]
++ plus4[31] offset_pc[31] sbit illop[31] xaddr[31] whichPC[31]
+XpcselB mux5 pcsel[0]#31 pcsel[1]#31 pcsel[2]#31 
++ plus4[30:0] offset_pc[30:0] jt[30:0] illop[30:0] xaddr[30:0] whichPC[30:0]
+
+// Reset PC
+Xmux mux2 reset#32 whichPC[31:0] r_adr[31:0] pcPlusFour[31:0]
+
+// 32 big reg
+Xreg dreg pcPlusFour[31:0] clk#32 ia[31:0]
+
+// Plus 4 //FIXED
+X_plus4D FA ia[30:0]    gnd#28 vdd gnd#2    cout[29:0] gnd        plus4[30:0]    cout[30:0]
+
+// Offset = PC + 4 + 4 * SEXT(C)
+// C
+Xoffset_shlA connect sxt_c[28:0] times4[30:2]
+Xoffset_shlB connect gnd#2 times4[1:0]
+Xoffset_addA FA plus4[30:1] times4[30:1] o_cout[29:0] offset_pc[30:1] o_cout[30:1]
+Xoffset_addB FA plus4[0] times4[0] gnd offset_pc[0] o_cout[0]
+Xoffset_out connect offset_pc[30:0] offset[30:0]
+
+// Supervisor Bit
+// A1 - set MSB
+.connect r_adr[31] illop[31] xaddr[31] illop[2] xaddr[3] vdd
+Xreset connect r_adr[30:0] gnd#31
+X_illopA connect illop[30:3] gnd#28
+X_illopB connect illop[1:0] gnd#2
+X_xaddrA connect xaddr[30:4] gnd#27
+X_xaddrB connect xaddr[2:0] gnd#3
+// A2
+.connect ia[31] offset_pc[31]
+// A3
+Xia and2 ia[31] jt[31] sbit
+// A4
+.connect gnd offset[31]
+// A5 
+.connect ia[31] plus4[31]
+.ends
+
+// REGISTER FILE
+.subckt regfile clk werf ra2sel wasel ra[4:0] rb[4:0] rc[4:0]
++ wdata[31:0] radata[31:0] rbdata[31:0] z
+
+// Read Address 2 Based on RA2SEL
+Xra2selA mux2 ra2sel#5 rb[4:0] rc[4:0] ra2mux[4:0]
+
+// RA != R31 Boolean
+X_nandA nand2 ra[3:2] ra[1:0] Atemp[1:0]
+X_norA nor2 Atemp[1] Atemp[0] Atemp2
+X_nandA2 nand2 Atemp2 ra[4] not_ra31_sig
+
+// RB != R31 Boolean
+X_nandB nand2 rb[3:2] rb[1:0] Btemp[1:0]
+X_norB nor2 Btemp[1] Btemp[0] Btemp2
+X_nandB2 nand2 Btemp2 rb[4] not_rb31
+
+// RC != R31 Boolean
+X_nandC nand2 waddr[3:2] waddr[1:0] wtemp[1:0]
+X_norC nor2 wtemp[1] wtemp[0] wtemp2
+X_nandC2 nand2 wtemp2 waddr[4] not_wr31
+
+// Read Address 2 != R31 Boolean => RA2SEL
+Xra2sel31 mux2 ra2sel not_rb31 not_wr31 not_ra2_31_sig
+
+// Always Read 0 for Read Address 1 and Read Address 2
+X_a31_mux mux2 not_ra31_sig#32 gnd#32 adata[31:0] radata[31:0]
+X_b31_mux mux2 not_ra2_31_sig#32 gnd#32 bdata[31:0] rbdata[31:0]
+
+// Force R31 as 0 for Rc
+X_c31_mux mux2 not_wr31#32 gnd#32 wdata[31:0] writecdata[31:0]
+
+// WASEL ~ B 11110
+X_xpA connect xp[4:1] vdd#4
+X_xpB connect xp[0] gnd
+X_wasel mux2 wasel#5 rc[4:0] xp[4:0] waddr[4:0]
+
+X_testconnect connect xpdata[31:0] test[31:0]
+
+// 32-Bit Nor Z ~ D
+X_zrf0 nor4 radata[31:24] radata[23:16] radata[15:8] radata[7:0] z0[7:0]
+X_zrf1 nand4 z0[7:6] z0[5:4] z0[3:2] z0[1:0] z1[1:0]
+X_zrf2 nor2 z1[1] z1[0] z
+
+// Memory - reg[0:30]
+Gregfile memory
++ vdd gnd gnd  ra[4:0]     adata[31:0] // A read port
++ vdd gnd gnd  ra2mux[4:0] bdata[31:0] // B read port
++ gnd clk werf waddr[4:0]  writecdata[31:0] // write port
++ width=32 nlocations=31
+
+.ends
+
+// PARTS
+// connection
+.subckt connect a b 
+.connect a b 
+.ends
+
+// mux5
+.subckt mux5 s0 s1 s2 a b c e f y
+Xmux2 mux2 s2 a f d0v4
+Xmux4 mux4 s0 s1 d0v4 b c e y
+.ends

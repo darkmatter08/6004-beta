@@ -1,0 +1,355 @@
+////////////////////////////////////////////////////////////////////////////////
+// Template for lab 5 submission
+////////////////////////////////////////////////////////////////////////////////
+
+// Include the checkoff program:
+.include "/shared/bsim/lab5checkoff.uasm"
+
+// Leave the following as zero to run ALL the test cases, and get your solution
+//   validated if all pass.  If you have trouble with test case N, set it to N
+//   to run JUST that test case (for easier debugging):
+TestCase:	LONG(7)
+
+// Quicksort-in-place code.  We include the C/Python version here as a comment;
+// you can use this as a model for your Beta assembly version:
+
+//def partition(array,left,right):
+//    # choose middle element of array as pivot
+//    pivotIndex = (left+right) >> 1;
+//    pivotValue = array[pivotIndex]
+//
+//    # swap array[right] and array[pivotIndex]
+//    # note that we already store array[pivotIndex] in pivotValue
+//    array[pivotIndex] = array[right]
+//    // array[right] = pivotValue (implied)
+//
+//    # elements <= the pivot are moved to the left (smaller indices)
+//    storeIndex = left
+//    for i in xrange(left,right):  # don't include array[right]
+//        temp = array[i]
+//        if temp <= pivotValue:
+//            array[i] = array[storeIndex]
+//            array[storeIndex] = temp
+//            storeIndex += 1
+//
+//    # move pivot to its final place
+//    array[right] = array[storeIndex]
+//    array[storeIndex] = pivotValue;
+//    return storeIndex;
+
+partition:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+	
+//	.breakpoint
+	// Fill in your code here...
+	PUSH(r1) //arg1 - array
+	PUSH(r2) //arg2 - left
+	PUSH(r3) //arg3 - right
+	PUSH(r4) // pivotIndex
+	PUSH(r5) // pivotValue
+	PUSH(r6) // storeIndex
+	PUSH(r7) // MEM[array@right] (TEMP) || i for loop
+	PUSH(r8) // temp, for use within loopBody
+	PUSH(r9) // temporary, for MEM[array@storeIndex]
+	
+	LD(BP, -12, r1) //for arg1 - address of array
+	LD(BP, -16, r2) //for arg2 - left
+	LD(BP, -20, r3) //for arg3 - right
+	
+	.breakpoint
+	
+	// r4 <= pivotIndex
+	ADD(r2, r3, r0)
+	SRAC(r0, 1, r4)
+	
+	// r5 <= pivotValue = r1+r4, MEM[array@pivotIndex]
+	SHLC(r4, 2, r0) // r0 <= r4 * 4 // SWAPPED
+	ADD(r1, r0, r0) // CHANGED - SWAPPED ORDER OF SHLC
+	LD(r0, 0, r5)//LD(r5, 0, r0) //LD(r0, 0, r5) // r0 <= mem[r5] // CHANGED!!
+	
+	//SWAP
+	//    # swap array[right] and array[pivotIndex]
+	//    # note that we already store array[pivotIndex] in pivotValue
+	//    array[pivotIndex] = array[right]
+
+    //    r7 = array[right]
+	//    array[right] = pivotValue
+	//    array[pivotIndex] = r7
+	SHLC(r3, 2, r0) // r0 <= r3 * 4 // SWAPPED
+	ADD(r1, r0, r0) // r0 <= array@right
+	LD(r0, 0, r7) // r7 <= MEM[array@right * 4] || R7 TEMPORARILY USED
+	ST(r5, 0, r0) // MEM[r0] <= pivotValue // ******* CHANGES FROM 1 to 5 *******
+	// r0 is done
+	SHLC(r4, 2, r0) // r0 <= r4 * 4 // SWAPPED
+	ADD(r1, r0, r0) // r0 <= array@pivotIndex
+	ST(r7,0,r0)// MEM[r0] <= r7
+	// r7 done
+	//END SWAP
+	
+	MOVE(r2, r6) // copy left into storeIndex
+//	.breakpoint
+	
+	// LOOP
+	// r7 for i
+	MOVE(r2, r7)
+	BR(loopCond, LP)
+	// r7, r8, r9 free
+	
+	// DONE WITH LOOP
+//    # move pivot to its final place
+//    array[right] = array[storeIndex]
+//    array[storeIndex] = pivotValue;
+//    return storeIndex;
+	
+	// r0 <= array@storeIndex
+	SHLC(r6, 2, r0) // r0 <= r6 * 4 // SWAPPED
+	ADD(r1, r0, r0)
+	// r9 <= MEM[array@storeIndex]
+	LD(r0, 0, r9)
+	// r0 done
+	
+	SHLC(r3, 2, r0) // r0 <= r3 * 4 // SWAPPED
+	ADD(r1, r0, r0) // r0 <= array@right
+	ST(r9, 0, r0)// MEM[r0] <= r9
+	// r9 done
+	
+	//    array[storeIndex] = pivotValue;
+	// r0 <= array@storeIndex
+	//.breakpoint 
+	SHLC(r6, 2, r0) // r0 <= r6 * 4 // SWAPPED
+	ADD(r1, r0, r0)
+	ST(r5, 0, r0) // MEM[r0] <= r5
+	
+	MOVE(r6, r0)
+	
+	// Restore regs
+	POP(r9)
+	POP(r8)
+	POP(r7)
+	POP(r6)
+	POP(r5)
+	POP(r4)
+	POP(r3)
+	POP(r2)
+	POP(r1)
+	
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+
+//    for i in xrange(left,right):  # don't include array[right]
+//        temp = array[i]
+//        if temp <= pivotValue:
+//            array[i] = array[storeIndex]
+//            array[storeIndex] = temp
+//            storeIndex += 1
+// DOES NOT OBEY STACK DISCIPLINE FOR REGS. 
+loopCond:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+	
+	// METHOD BODY
+	// r0 <= r7 < r3
+	//.breakpoint
+	CMPLT(r7, r3, r0)
+	BT(r0, loopBody, LP)
+	//r0 done
+	
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+	
+// DOES NOT OBEY STACK DISCIPLINE FOR REGS. 
+loopBody:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+	
+	// METHOD BODY
+	// r0 <= array@i
+	SHLC(r7, 2, r0) // r0 <= r7 * 4 // SWAPPED
+	ADD(r1 ,r0, r0)
+	// temp = r8 <= MEM[r0]
+	LD(r0, 0, r8)
+	// r0 done
+	
+	// loopIfBody - Conditional
+	// r0 <== temp <= pivotValue
+	CMPLE(r8, r5, r0)
+	BT(r0, loopIfBody, LP)
+	// r0 done
+	
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+
+//            array[i] = array[storeIndex]
+//            array[storeIndex] = temp
+//            storeIndex += 1
+// DOES NOT OBEY STACK DISCIPLINE FOR REGS. 
+loopIfBody:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+	
+	// r0 <= array@storeIndex
+	SHLC(r6, 2, r0) // r0 <= r0 * 4 // SWAPPED
+	ADD(r1, r0, r0)
+	// r9 <= MEM[array@storeIndex]
+	LD(r0, 0, r9)
+	// r0 done
+	// r0 <= array + i
+	SHLC(r7, 2, r0) // r0 <= r7 * 4 // SWAPPED
+	ADD(r1, r0, r0)
+	// MEM[r0] <= r8
+	ST(r8, 0, r0)
+	// r0 done
+	// temp = r8
+	// r0 <= array@storeIndex
+	SHLC(r6, 2, r0) // r0 <= r6 * 4 // SWAPPED
+	ADD(r1, r6, r0)
+	ST(r8, 0, r0)
+	//storeIndex += 1
+	ADDC(r6, 1, r6)
+	
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+
+//def quicksort(array, left, right):
+//    if left < right:
+//        pivotIndex = partition(array,left,right)
+//        quicksort(array,left,pivotIndex-1)
+//        quicksort(array,pivotIndex+1,right)
+
+// quicksort(ArrayBase, left, right)
+quicksort:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+	
+	// Fill in your code here...
+	// preserving regs
+	PUSH(r1) //arg1
+	PUSH(r2) //arg2
+	PUSH(r3) //arg3
+	PUSH(r4) // left < right
+	
+	// METHOD BODY 
+	LD(BP, -12, r1) //for arg1 - address of array
+	LD(BP, -16, r2) //for arg2 - left
+	LD(BP, -20, r3) //for arg3 - right
+//	.breakpoint
+	
+	// r4 <= left < right
+	CMPLT(r2, r3, r4)
+	// Push arguments onto the stack
+	PUSH(r3)
+	PUSH(r2)
+	PUSH(r1)
+	// BRANCH TO BODY OF IF STATEMENT if r4 != 0
+	BNE(r4, pivotIndexBody, LP)
+	DEALLOCATE(3)
+	
+	// METHOD EXIT 
+	// Restore regs
+	POP(r4)
+	POP(r3)
+	POP(r2)
+	POP(r1)
+	
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+
+//def quicksort(array, left, right):
+//    if left < right:
+//        pivotIndex = partition(array,left,right)
+//        quicksort(array,left,pivotIndex-1)
+//        quicksort(array,pivotIndex+1,right)
+pivotIndexBody:
+	PUSH(LP)
+	PUSH(BP)
+	MOVE(SP, BP)
+	
+	// Save regs
+	PUSH(r1) //arg1
+	PUSH(r2) //arg2
+	PUSH(r3) //arg3
+	PUSH(r4) // left < right
+	PUSH(r5) // pivotIndex-1
+	PUSH(r6) // pivotIndex+1
+	
+	// METHOD BODY 
+	
+	// load args from stack into regs 1 to 3
+	LD(BP, -12, r1) //for arg1 - address of array
+	LD(BP, -16, r2) //for arg2 - left
+	LD(BP, -20, r3) //for arg3 - right
+//	.breakpoint
+	
+	// find pivotIndex
+	// push arguments into the stack.
+	PUSH(r3) //right
+	PUSH(r2) //left
+	PUSH(r1) //ArrayBase
+//	.breakpoint
+	// Call partition
+	BR(partition, LP) // FIX THIS...
+	DEALLOCATE(3) // remove args from stack
+	// R0 contains pivotIndex
+	
+	// quicksort recursive call 1
+	// r5 <= pivotIndex-1
+	SUBC(r0, 1, r5)
+	// Push args
+	PUSH(r5) // pivotIndex-1
+	PUSH(r2) // left
+	PUSH(r1) // ArrayBase
+	// Branch to quicksort
+	BR(quicksort, LP)
+	DEALLOCATE(3)
+	
+	// quicksort recursive call 2
+	// r6 <= pivotIndex+1
+	ADDC(r0, 1, r6)
+	// Push args
+	PUSH(r3) // right
+	PUSH(r6) // pivotIndex+1
+	PUSH(r1) // ArrayBase
+	// Branch to quicksort
+	BR(quicksort, LP)
+	DEALLOCATE(3)
+	
+	// METHOD EXIT
+	
+	// Restore regs
+	POP(r6)
+	POP(r5)
+	POP(r4)
+	POP(r3)
+	POP(r2)
+	POP(r1)
+	
+	MOVE(BP, SP)
+	POP(BP)
+	POP(LP)
+	JMP(LP)
+
+// Allocate a stack: SP is initialized by checkoff code.
+StackBasePtr:
+	LONG(StackArea)
+
+.unprotect
+
+StackArea:
+	STORAGE(1000)
+
